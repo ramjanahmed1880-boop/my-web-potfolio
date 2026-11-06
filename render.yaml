@@ -1,0 +1,51 @@
+# Render Blueprint for a Static Site.
+# Dashboard alternative: New -> Static Site, then
+#   Build Command:      npm install && npm run build
+#   Publish Directory:  dist
+#   Redirects/Rewrites: Source /*  Destination /index.html  Action Rewrite
+services:
+  - type: web
+    name: ramjan-ahmed-website
+    runtime: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    # SPA fallback for React Router: deep links such as /contact load index.html
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+    envVars:
+      - key: NODE_VERSION
+        value: 20.18.0
+      # Public contact details. Render asks for these when the Blueprint is created.
+      - key: VITE_SITE_URL
+        sync: false
+      - key: VITE_CONTACT_EMAIL
+        sync: false
+      - key: VITE_WHATSAPP_NUMBER
+        sync: false
+      - key: VITE_TELEGRAM_USERNAME
+        sync: false
+      - key: VITE_GITHUB_URL
+        sync: false
+      - key: VITE_FACEBOOK_URL
+        sync: false
+      - key: VITE_YOUTUBE_URL
+        sync: false
+      - key: VITE_LINKEDIN_URL
+        sync: false
+      - key: VITE_ABOUT_BIO
+        sync: false
